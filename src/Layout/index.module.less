@@ -1,0 +1,141 @@
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #c4c4c4;
+}
+
+.header {
+  background: #ffff;
+  padding: 0rem;
+}
+
+:global(.ant-layout-header) {
+  background: #ffff !important;
+  height: 70px !important;
+}
+
+.sider {
+  background: #2b4656 !important;
+  height: 100%;
+  position: fixed !important;
+}
+
+.content {
+  background: #ffff !important;
+}
+
+.searchFieldInput {
+  border-radius: 10px !important;
+}
+
+.mainLayout {
+  margin-left: 200px;
+}
+
+.logoContainer {
+  margin: 10px !important;
+}
+
+.letterSpacing {
+  letter-spacing: 1px;
+}
+
+.addListingBtn {
+  border-radius: 20px !important;
+  background: #0a3d62;
+  height: 30px !important;
+  width: 100% !important;
+  padding: 0rem 2rem;
+  // letter-spacing: 0.3px !important;
+}
+
+.footerSection {
+  justify-content: flex-end;
+}
+
+.footer {
+  background: #414141 !important;
+}
+
+.footerText {
+  letter-spacing: 1px;
+  color: #c4c4c4 !important;
+}
+
+.rightSectionWrapper {
+  display: flex;
+  justify-content: end;
+}
+
+.footerTextWrapper {
+  display: flex;
+
+  // justify-content: space-between;
+  >div {
+    margin: 2rem 1rem 2rem 0rem;
+  }
+}
+
+.iconWrapper {
+  >a {
+    margin: 0rem 1rem;
+    cursor: pointer;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .footerTextWrapper {
+    display: block;
+
+    // justify-content: space-between;
+    >div {
+      margin: 2rem 1rem 2rem 0rem;
+    }
+  }
+
+  .rightSectionWrapper {
+    display: flex;
+    justify-content: end;
+  }
+
+  .footerWrapper {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .footerSection {
+    justify-content: flex-start;
+  }
+
+  .footerTextWrapper {
+    display: inline;
+
+    // justify-content: space-between;
+    >div {
+      margin: 2rem 0rem 2rem 0rem;
+    }
+  }
+
+  .rightSectionWrapper {
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .footerWrapper {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .iconWrapper {
+    >div {
+      margin: 0rem 1rem 0rem 0rem;
+    }
+  }
+}
+
+.logoutIcon {
+  margin: 0px 20px;
+}
