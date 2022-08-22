@@ -135,7 +135,7 @@ const Sheet = () => {
         </div>
         <div className={style.flex}>
           <SimpleParagraph
-            paragraph={`Revenure - Expense `}
+            paragraph={`Revenue - Expense `}
             css={style.para}
             margin={"5px 0px"}
           />
@@ -269,7 +269,7 @@ const Sheet = () => {
     const { assetsTotal, liabTotal, ownerEquity, endingOwnerEquity } =
       allTypesData();
     let flag = 0;
-    if (assetsTotal == liabTotal + endingOwnerEquity + ownerEquity) {
+    if (assetsTotal == liabTotal + ownerEquity) {
       //if balance is equal
       flag = 1;
     }
@@ -308,7 +308,7 @@ const Sheet = () => {
               margin={"5px 0px"}
             />
             <SimpleParagraph
-              paragraph={`Liabilities + Capital + Ending Capital`}
+              paragraph={`Liabilities + Capital`}
               css={style.para}
               margin={"5px 0px"}
             />
@@ -320,7 +320,7 @@ const Sheet = () => {
               margin={"5px 0px"}
             />
             <SimpleParagraph
-              paragraph={`${liabTotal} + ${ownerEquity} + ${endingOwnerEquity}`}
+              paragraph={`${liabTotal} + ${ownerEquity}`}
               css={style.para}
               margin={"5px 0px"}
             />
@@ -335,7 +335,7 @@ const Sheet = () => {
               margin={"5px 0px"}
             />
             <SimpleParagraph
-              paragraph={`$ ${liabTotal + ownerEquity + endingOwnerEquity}`}
+              paragraph={`$ ${liabTotal + ownerEquity}`}
               css={style.para}
               margin={"5px 0px"}
             />
