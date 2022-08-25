@@ -70,31 +70,45 @@ const Sheet = () => {
 
         console.log(typeB);
 
+        if (typeA == "Revenue") {
+          revTotal -= Number(debit);
+        }
         if (typeB == "Revenue") {
           revTotal += Number(credit);
         }
         if (typeB == "Owner Equity") {
           ownerEquity += Number(credit);
         }
+        if (typeA == "Owner Equity") {
+          ownerEquity += Number(debit);
+        }
         if (typeA == "Expense") {
           expTotal += Number(debit);
+        }
+        if (typeB == "Expense") {
+          expTotal -= Number(debit);
         }
         if (typeA == "Owner withdraw") {
           ownerWithDraw += Number(debit);
         }
+        if (typeB == "Owner withdraw") {
+          ownerWithDraw -= Number(credit);
+        }
         if (typeA == "Asset") {
+          console.log('debit: ', debit );
           assetsTotal += Number(debit);
         }
         if (typeB == "Asset") {
+          console.log('credit: ', credit );
           assetsTotal -= Number(credit);
         }
         if (typeA == "Liability") {
-          console.log("yes");
-          liabTotal += Number(debit);
+          // console.log("yes");
+          liabTotal -= Number(debit);
         }
         if (typeB == "Liability") {
-          console.log("yes");
-          liabTotal -= Number(credit);
+          // console.log("yes");
+          liabTotal += Number(credit);
         }
       });
     netTotal = revTotal - expTotal;
