@@ -52,7 +52,7 @@ const Sheet = () => {
   console.log("documents: ", documents);
 
   const allTypesData = () => {
-    let prevCapital = 10000;
+    let prevCapital = 5000;
     let revTotal = 0;
     let expTotal = 0;
     let netTotal = 0;
@@ -80,7 +80,7 @@ const Sheet = () => {
           ownerEquity += Number(credit);
         }
         if (typeA == "Owner Equity") {
-          ownerEquity += Number(debit);
+          ownerEquity -= Number(debit);
         }
         if (typeA == "Expense") {
           expTotal += Number(debit);
@@ -95,19 +95,15 @@ const Sheet = () => {
           ownerWithDraw -= Number(credit);
         }
         if (typeA == "Asset") {
-          console.log('debit: ', debit );
           assetsTotal += Number(debit);
         }
         if (typeB == "Asset") {
-          console.log('credit: ', credit );
           assetsTotal -= Number(credit);
         }
         if (typeA == "Liability") {
-          // console.log("yes");
           liabTotal -= Number(debit);
         }
         if (typeB == "Liability") {
-          // console.log("yes");
           liabTotal += Number(credit);
         }
       });
@@ -122,6 +118,7 @@ const Sheet = () => {
       ownerWithDraw,
       assetsTotal,
       liabTotal,
+      prevCapital,
       ownerEquity,
       endingOwnerEquity,
     };
@@ -193,8 +190,7 @@ const Sheet = () => {
   };
 
   const generateOwnerEquityStatement = () => {
-    const { netTotal, ownerWithDraw, ownerEquity } = allTypesData();
-    let prevCapital = 10000;
+    const { netTotal, ownerWithDraw, ownerEquity, prevCapital } = allTypesData();
     const balance = netTotal - ownerWithDraw;
 
     return (
@@ -283,7 +279,7 @@ const Sheet = () => {
     const { assetsTotal, liabTotal, ownerEquity, endingOwnerEquity } =
       allTypesData();
     let flag = 0;
-    if (assetsTotal == liabTotal + ownerEquity) {
+    if (assetsTotal == liabTotal + endingOwnerEquity) {
       //if balance is equal
       flag = 1;
     }
@@ -334,7 +330,7 @@ const Sheet = () => {
               margin={"5px 0px"}
             />
             <SimpleParagraph
-              paragraph={`${liabTotal} + ${ownerEquity}`}
+              paragraph={`${liabTotal} + ${endingOwnerEquity}`}
               css={style.para}
               margin={"5px 0px"}
             />
@@ -349,7 +345,7 @@ const Sheet = () => {
               margin={"5px 0px"}
             />
             <SimpleParagraph
-              paragraph={`$ ${liabTotal + ownerEquity}`}
+              paragraph={`$ ${liabTotal + endingOwnerEquity}`}
               css={style.para}
               margin={"5px 0px"}
             />

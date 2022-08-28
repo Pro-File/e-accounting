@@ -3,12 +3,15 @@ import React, { useEffect, useState } from "react";
 import { useCollection } from "../../../../hooks/useCollection";
 import style from "./index.module.less";
 import moment from "moment";
+import { DeleteOutlined } from "@ant-design/icons";
 import CustomTable from "../../../../Components/Table/CustomTable";
-import { Row } from "antd";
+import { message, Row, Space } from "antd";
 import { SimpleHeading } from "../../../../Components/Heading";
+import { useFirestore } from "../../../../hooks/useFirestore";
 
 function GeneralEntries() {
   const { documents, error } = useCollection("generalEntry");
+  const { deleteDocument, response } = useFirestore("generalEntry");
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -18,6 +21,15 @@ function GeneralEntries() {
     setData(documents);
     console.log("doc: ", documents);
   }, [documents]);
+
+  const handleDeleteRecord = async (record) => {
+    try {
+      await deleteDocument(record.id);
+      message.success("Record Deleted Successfully!");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const columns = [
     {
@@ -63,6 +75,15 @@ function GeneralEntries() {
       render: (val) => {
         return <div>{val?.credit}</div>;
       },
+    },
+    {
+      title: "Action",
+      key: 5,
+      render: (text, record) => (
+        <Space size="middle" className="action">
+          <DeleteOutlined onClick={() => handleDeleteRecord(record)} />
+        </Space>
+      ),
     },
   ];
   return (
