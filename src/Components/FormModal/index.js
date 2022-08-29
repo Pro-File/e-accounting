@@ -1,56 +1,100 @@
 import React, { useState } from "react";
 import style from "./index.module.less";
-import Modal from "../../../../Components/Modal";
-import { SimpleHeading } from "../../../../Components/Heading";
-import { SimpleButton } from "../../../../Components/Buttons";
-import { TextBox } from "../../../../Components/Forms/TextBox";
-import { Selector } from "../../../../Components/Forms/Select";
+import Modal from "../Modal";
+import { SimpleHeading } from "../Heading";
+import { SimpleButton } from "../Buttons";
+import { TextBox } from "../Forms/TextBox";
+import { Selector } from "../Forms/Select";
 import { Row, Col, Form, Divider, message } from "antd";
 // from hooks
-import { useAuthContext } from "../../../../hooks/useAuthContext";
-import { useFirestore } from "../../../../hooks/useFirestore";
-import { accountTypes } from "../../../../constants";
+import { useAuthContext } from "../../hooks/useAuthContext";
+import { useFirestore } from "../../hooks/useFirestore";
+import { accountTypes } from "../../constants";
+import { useEffect } from "react";
+import { timestamp } from "../../firebase/config";
 
-function FormModal() {
+function FormModal({
+  isModalVisible,
+  setIsModalVisible,
+  isEdit,
+  setIsEdit,
+  setEditData,
+  editData,
+}) {
   const { dispatch, generalEntry } = useAuthContext();
   const [form] = Form.useForm();
-  const { addDocument, response } = useFirestore("generalEntry");
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const { addDocument, response, updateDocument } =
+    useFirestore("generalEntry");
   const [loading, setLoading] = useState(false);
   const [debitType, setDebitType] = useState();
   const [creditType, setCreditType] = useState();
 
-  const onFinish = async(values) => {
-    console.log("submitted: ", values);
-    setLoading(true);
-    if (Number(values.credit) === Number(values.debit)) {
-      try {
-        const debitData = {
-          debitInfo: values.debitInfo,
-          debit: values.debit,
-          typeA: values.typeA
+  useEffect(() => {
+    return () => {
+      setEditData(null);
+    };
+  }, [editData]);
+
+  const onFinish = async (values) => {
+    if (isEdit) {
+      if (Number(values.credit) === Number(values.debit)) {
+        try {
+          const debitData = {
+            debitInfo: values.debitInfo,
+            debit: values.debit,
+            typeA: values.typeA,
+          };
+          const creditData = {
+            creditInfo: values.creditInfo,
+            credit: values.credit,
+            typeB: values.typeB,
+          };
+          const entriesToPost = {
+            debitData: debitData,
+            creditData: creditData,
+            createdAt: timestamp.fromDate(new Date()),
+          };
+          await updateDocument(editData.id, entriesToPost);
+          form.resetFields();
+          setLoading(false);
+          closeModal();
+        } catch (error) {
+          message.error(error.message);
+          setLoading(false);
         }
-        const creditData = {
-          creditInfo: values.creditInfo,
-          credit: values.credit,
-          typeB: values.typeB
-        }
-        const entriesToPost = {
-          debitData: debitData,
-          creditData: creditData
-        }
-        dispatch({ type: "General_Entry", payload: entriesToPost });
-        await addDocument(entriesToPost);
-        form.resetFields();
-        setLoading(false);
-        closeModal();
-      } catch (error) {
-        message.error(error.message);
-        setLoading(false);
+      } else {
+        message.error("Debit Ammount must be equal to Credit Ammount!");
       }
-    }
-    else{
-      message.error("Debit Ammount must be equal to Credit Ammount!");
+    } else {
+      setLoading(true);
+      if (Number(values.credit) === Number(values.debit)) {
+        try {
+          const debitData = {
+            debitInfo: values.debitInfo,
+            debit: values.debit,
+            typeA: values.typeA,
+          };
+          const creditData = {
+            creditInfo: values.creditInfo,
+            credit: values.credit,
+            typeB: values.typeB,
+          };
+          const entriesToPost = {
+            debitData: debitData,
+            creditData: creditData,
+          };
+          dispatch({ type: "General_Entry", payload: entriesToPost });
+          await addDocument(entriesToPost);
+          form.resetFields();
+          setLoading(false);
+          closeModal();
+        } catch (error) {
+          message.error(error.message);
+          setLoading(false);
+        }
+      } else {
+        message.error("Debit Ammount must be equal to Credit Ammount!");
+      }
     }
   };
 
@@ -68,10 +112,8 @@ function FormModal() {
 
   const closeModal = () => {
     setIsModalVisible(false);
+    setIsEdit(false);
     form.resetFields();
-  };
-  const showModal = () => {
-    setIsModalVisible(true);
   };
 
   return (
@@ -80,18 +122,20 @@ function FormModal() {
         form={form}
         cssClass={style.modal}
         closable="false"
-        okText={"Add New General Entry"}
+        buttonLoader={loading}
+        okText={isEdit ? "Edit General Entry" : "Add New General Entry"}
         body={
           <div>
             <Form
               scrollToFirstError={true}
               form={form}
               layout="vertical"
+              initialValues={editData}
               autoComplete="off"
               onFinish={onFinish}
               onFinishFailed={onFinishFailed}
             >
-              <Row gutter={[24, 12]}>
+              <Row gutter={[24, 6]}>
                 <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                   <TextBox
                     type="text"
@@ -123,7 +167,6 @@ function FormModal() {
                     cssClass={style.selectorWrapper}
                   />
                 </Col>
-                <Divider className={style.divider} />
                 <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                   <TextBox
                     type="text"
@@ -165,23 +208,12 @@ function FormModal() {
         handleCancel={closeModal}
         title={
           <SimpleHeading
-            heading="Add General Entry"
+            heading={isEdit ? "Edit General Entry" : "Add General Entry"}
             size="24"
             margin="0px 0px"
           />
         }
       />
-      <Row className={style.end}>
-        <SimpleButton
-          text={"Add New"}
-          onClick={showModal}
-          size={"small"}
-          loading={loading}
-          shape="round"
-          className={style.btnStyle}
-          type={"primary"}
-        />
-      </Row>
     </>
   );
 }
