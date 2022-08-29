@@ -29,12 +29,6 @@ function FormModal({
   const [debitType, setDebitType] = useState();
   const [creditType, setCreditType] = useState();
 
-  useEffect(() => {
-    return () => {
-      setEditData(null);
-    };
-  }, [editData]);
-
   const onFinish = async (values) => {
     if (isEdit) {
       if (Number(values.credit) === Number(values.debit)) {
@@ -64,6 +58,7 @@ function FormModal({
         }
       } else {
         message.error("Debit Ammount must be equal to Credit Ammount!");
+        setLoading(false);
       }
     } else {
       setLoading(true);
@@ -94,6 +89,7 @@ function FormModal({
         }
       } else {
         message.error("Debit Ammount must be equal to Credit Ammount!");
+        setLoading(false);
       }
     }
   };
@@ -112,7 +108,7 @@ function FormModal({
 
   const closeModal = () => {
     setIsModalVisible(false);
-    setIsEdit(false);
+    isEdit && setIsEdit(false);
     form.resetFields();
   };
 
