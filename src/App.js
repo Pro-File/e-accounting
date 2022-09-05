@@ -15,7 +15,6 @@ const App = () => {
           component={FinancialStatementMainComponent}
           exact
         />
-        {/* <Route path="/ledger" component={Ledger} exact /> */}
       </LayoutWrapper>
     </Switch>
   );
